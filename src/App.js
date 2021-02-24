@@ -1,13 +1,14 @@
-import React, { Component } from 'react'
-import './App.css'
-import { Provider } from 'react-redux'
+import React, { Component } from 'react';
+import './App.css';
+import { Provider } from 'react-redux';
 import { AuthUserContext } from './session';
-import { withFirebase } from './firebase'
-import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom'
+import { withFirebase } from './firebase';
+import { BrowserRouter as Router, Switch, Redirect, Route } from 'react-router-dom';
 import configureStore from './store';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
-import { Home, Login, Register, Flights } from './components'
-import { PATHS, COLORS } from './constants'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { Home, Login, Register, Flights } from './components';
+import { PATHS, COLORS } from './constants';
+import firebase from './firebase/Firebase'
 
 const theme = createMuiTheme({
   palette: {
@@ -24,7 +25,15 @@ const theme = createMuiTheme({
 });
 
 class App extends Component {
-
+  constructor(props) {
+    super(props)
+    this.state = {
+       flight: [],
+       ref: firebase.firestore().collection("flights"),
+       
+    }
+  }
+  
   state = {
     authUser: null
   }
@@ -39,7 +48,8 @@ class App extends Component {
 
   render() {
     return (
-      <MuiThemeProvider theme={theme}>
+      <div className="App">
+        <MuiThemeProvider theme={theme}>
         <Provider store={configureStore()}>
           <Router>
             <Switch>
@@ -54,6 +64,8 @@ class App extends Component {
           </Router>
         </Provider>
       </MuiThemeProvider>
+      </div>
+      
     )
   }
 }
