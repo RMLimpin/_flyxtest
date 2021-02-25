@@ -25,14 +25,6 @@ const theme = createMuiTheme({
 });
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-       flight: [],
-       ref: firebase.firestore().collection("flights"),
-       
-    }
-  }
   
   state = {
     authUser: null
@@ -48,7 +40,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="Appss">
         <MuiThemeProvider theme={theme}>
         <Provider store={configureStore()}>
           <Router>
@@ -65,7 +57,6 @@ class App extends Component {
         </Provider>
       </MuiThemeProvider>
       </div>
-      
     )
   }
 }

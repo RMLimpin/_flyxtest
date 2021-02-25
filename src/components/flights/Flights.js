@@ -5,9 +5,9 @@ import { withFirebase } from '../../firebase'
 import { withRouter } from 'react-router-dom'
 import { compose } from 'redux'
 import { Icon } from '@mdi/react'
-import { mdiPlus } from '@mdi/js'
+import { mdiEmailEdit, mdiPlus } from '@mdi/js'
 import { Main } from '../'
-import { FlightCard, AddFlight } from '.'
+import { FlightCard, AddFlight, EditFlight } from '.'
 
 class Flights extends Component {
 
@@ -23,7 +23,7 @@ class Flights extends Component {
     flights: null,
     openFlight: false
   }
-
+  
   componentDidMount() {
     this.setState({ loading: true })
     const flightsRef = this.props.firebase.flights()

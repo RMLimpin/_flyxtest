@@ -126,6 +126,10 @@ class Login extends Component {
               helperText={!!error && error}
             />
           </div>
+          <h4>SAMPLE LOGINS</h4>
+          USERNAME: <input type="text" onClick={() => {navigator.clipboard.writeText(this.state.textToCopy)}} value="test@user.com" /> <br />
+          PASSWORD: <input type="text" onClick={() => {navigator.clipboard.writeText(this.state.textToCopy)}} value="P@ssw0rd123!" />
+
           <div style={styles.buttonOuterContainer}>
             <div style={styles.buttonInnerContainer}>
               <Button
