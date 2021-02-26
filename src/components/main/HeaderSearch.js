@@ -51,6 +51,7 @@ class HeaderSearch extends Component {
             placeholder="Search"
             onFocus={this.focus.bind(this)}
             onBlur={this.unfocus.bind(this)}
+            onchange={this.searchFlight}
           />
         </Box>
       </div>
@@ -66,7 +67,22 @@ class HeaderSearch extends Component {
     this.setState({ focused: false })
     this.props.blur()
   }
+
+  async searchFlight() {
+    this.setState({ loading: true })
+    const flightsRef = this.props.firebase.flights()
+    const filteredFlights = flightsRef
+      .where('origin', '==', 'BUG')
+      .where('destination', '==', '')
+      .where('date', '==', '')
+      .get()
+      .then((snapshot) => console.log(snapshot.docs))
+    
 }
+}
+
+
+
 
 const mapStateToProps = (state) => {
   return ({

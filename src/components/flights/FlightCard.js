@@ -7,7 +7,7 @@ import { mdiAirplane, mdiPlus } from '@mdi/js'
 import { Box, Button, IconButton } from '@material-ui/core'
 import { Overlay } from '.'
 import { grey } from '@material-ui/core/colors'
-import { Edit, Favorite } from '@material-ui/icons'
+import { Edit, Favorite, HighlightOffRounded } from '@material-ui/icons'
 import DeleteFlight from './DeleteFlight'
 import EditFlight from './EditFlight'
 
@@ -17,7 +17,8 @@ const styles = {
   overlay: {
     borderRadius: 10,
     background: 'rgba(0,0,0,0.1)',
-    height: '90%',
+    height: '50%',
+    marginTop: '55%'
   },
   overlayHidden: {
     transform: `scale(0.8) translateY(-${cardHeight * 1.2}px)`
@@ -78,25 +79,26 @@ class FlightCard extends Component {
           {this.renderFlight(details)}
         </Box>
         <Overlay show={hovered} style={styles.overlay} styleShown={styles.overlayShown} styleHidden={styles.overlayHidden} />
-        <EditFlight open={openEditFlight} onClose={() => this.setState({ openEditFlight: false })} />
-        <DeleteFlight open={openRemoveFlight} onClose={() => this.setState({ openRemoveFlight: false })} />
+        <EditFlight open={openEditFlight} onClose={() => this.setState({ openEditFlight: false })} details={details}/>
+        <DeleteFlight open={openRemoveFlight} onClose={() => this.setState({ openRemoveFlight: false })} details={details} />
       </div>
     )
   }
 
   renderFlight(details) {
     return (
-      <div style={{ height: '97%', width: '97%', borderRadius: 8, backgroundColor: grey[200] }}>
+      <div style={{ height: '97%', width: '97%', borderRadius: 8, backgroundColor: grey[200] }} >
             <div className="tools" style={{ marginTop: '-15px', float: 'right'}}>
-              <Button variant="contained" color="primary" size="small" 
+              <IconButton variant="contained" color="primary" size="small" 
                 className="hidden-button" onClick={() => this.setState({ openEditFlight: true })}> <Edit />
-              </Button>  {' '}
-              <Button variant="contained" color="secondary" size="small" 
-                className="hidden-button" onClick={() => this.setState({ openRemoveFlight: true })} > DELETE
-              </Button>
+              </IconButton>  {' '}
+              <IconButton variant="contained" color="secondary" size="small" 
+                className="hidden-button" onClick={() => this.setState({ openRemoveFlight: true })} > <HighlightOffRounded />
+              </IconButton>
             </div>
-
-            <div style={{ height: '50%', width: '100%', fontFamily: 'Open Sans Condensed', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: 120 }}>
+              
+            <div style={{ height: '50%', width: '100%', fontFamily: 'Open Sans Condensed', display: 'flex', justifyContent: 'center', alignItems: 'center', 
+            fontSize: 120 }} onClick={''}>
               {details.current}
             </div>
             

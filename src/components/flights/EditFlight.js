@@ -24,7 +24,7 @@ const customPostTheme = createMuiTheme({
 
 const styles = {
   container: {
-    height: 400,
+    height: 370,
     width: 500,
     padding: 20,
   },
@@ -51,17 +51,11 @@ const styles = {
 
 const initialState = {
   loading: false,
-  success: false,
-  destCountry: null,
-  destAirport: null,
-  orgCountry: null,
-  orgAirport: null,
-  date: new Date(),
-  filteredFlights: null
+  success: false
 }
 
 class EditFlight extends Component {
-  state = initialState
+
 
   componentWillMount() {
     let countries = airport.toJSON().map((model) => model.country)
@@ -74,7 +68,8 @@ class EditFlight extends Component {
   }
 
   render() {
-    const { open } = this.props
+    const { } = this.props
+    const { details, open } = this.props
     const { loading, success, countries, destCountry, destAirport, orgCountry, orgAirport, date } = this.state
 
     return (
@@ -87,6 +82,7 @@ class EditFlight extends Component {
           style={styles.container}
         >
           <DialogTitle id="form-dialog-title">EDIT FLIGHT DATA</DialogTitle>
+          Changing records of flight <b>{details.origin} - {details.destination}</b>
           {this.renderOrigin(countries, orgCountry, orgAirport)}
           {this.renderDestination(countries, destCountry, destAirport)}
           <div style={{ display: 'flex' }}>
@@ -97,7 +93,7 @@ class EditFlight extends Component {
               <DatePicker
                 style={{ margin: "10px 0px" }}
                 format='LL'
-                value={date}
+                value={moment(details.date).format("LL")}
                 onChange={(value) => this.setState({ date: value })}
               />
             </MuiPickersUtilsProvider>
@@ -109,7 +105,7 @@ class EditFlight extends Component {
                 variant={success ? "outlined" : "contained"}
                 color={success ? "secondary" : "primary"}
                 disabled={loading}
-                onClick={() => this.postFlight(orgAirport, destAirport, date)}
+                onClick={() => this.updateFlight(orgAirport, destAirport, date)}
               >
                 {success ? 'UPDATED' : 'UPDATE'}
                 {loading && <CircularProgress size={24} style={styles.buttonProgress} />}
@@ -151,7 +147,7 @@ class EditFlight extends Component {
     )
   }
 
-  async postFlight(origin, destination, date) {
+  async updateFlight(origin, destination, date) {
     if (!this.state.success) {
       if (origin && destination && date) {
         this.setState({ loading: true })
@@ -159,20 +155,16 @@ class EditFlight extends Component {
         const flightRef = await flightsRef.doc()
         const userRef = await this.props.firebase.user(this.props.userId)
 
-        await flightRef.set({
-          current: 1,
+        await flightsRef.doc('3OGs9sHC9E9E7WowJBd2').update({
           origin: this.getIata(origin),
           destination: this.getIata(destination),
-          date: moment(date).startOf('day').toDate().toString(),
-          poster: userRef
+          date: moment(date).startOf('day').toDate().toString()
         })
-        await this.props.firebase.addPost(this.props.userId, flightRef)
 
         this.setState({ loading: false, success: true })
       }
     }
   }
-
 
   rendercountries(countries) {
     if (countries) {
@@ -206,7 +198,7 @@ class EditFlight extends Component {
   //     .then((snapshot) => console.log(snapshot.docs))
   // }
 
-  renderOrigin(countries, country, airport) {
+  renderOrigin(countries, country, airport, details) {
     return (
       <div style={{ display: 'flex', justifyContent: 'space-between', margin: '20px 0px' }}>
         <OutlinedSelect
