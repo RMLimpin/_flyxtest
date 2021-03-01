@@ -10,6 +10,8 @@ import { grey } from '@material-ui/core/colors'
 import { Edit, Favorite, HighlightOffRounded } from '@material-ui/icons'
 import DeleteFlight from './DeleteFlight'
 import EditFlight from './EditFlight'
+import { firebase } from '@firebase/app';
+import '@firebase/firestore'
 
 const cardHeight = 300
 const cardWidth = 236
@@ -66,7 +68,7 @@ class FlightCard extends Component {
   }
 
   render() {
-    const { details } = this.props
+    const { details, id } = this.props
     const { hovered } = this.state
     const { editflights, openEditFlight } = this.state
     const { removeflights, openRemoveFlight } = this.state
@@ -75,17 +77,17 @@ class FlightCard extends Component {
         onMouseOver={this.hover.bind(this)}
         onMouseLeave={this.unhover.bind(this)}
       >
-        <Box style={styles.card}>
+        <Box style={styles.card} id={id}>
           {this.renderFlight(details)}
         </Box>
         <Overlay show={hovered} style={styles.overlay} styleShown={styles.overlayShown} styleHidden={styles.overlayHidden} />
-        <EditFlight open={openEditFlight} onClose={() => this.setState({ openEditFlight: false })} details={details}/>
-        <DeleteFlight open={openRemoveFlight} onClose={() => this.setState({ openRemoveFlight: false })} details={details} />
+        <EditFlight open={openEditFlight} onClose={() => this.setState({ openEditFlight: false })} details={details} id={id}/>
+        <DeleteFlight open={openRemoveFlight} onClose={() => this.setState({ openRemoveFlight: false })} details={details} id={id} />
       </div>
     )
   }
 
-  renderFlight(details) {
+  renderFlight(details, id) {
     return (
       <div style={{ height: '97%', width: '97%', borderRadius: 8, backgroundColor: grey[200] }} >
             <div className="tools" style={{ marginTop: '-15px', float: 'right'}}>
@@ -96,10 +98,11 @@ class FlightCard extends Component {
                 className="hidden-button" onClick={() => this.setState({ openRemoveFlight: true })} > <HighlightOffRounded />
               </IconButton>
             </div>
+            
               
             <div style={{ height: '50%', width: '100%', fontFamily: 'Open Sans Condensed', display: 'flex', justifyContent: 'center', alignItems: 'center', 
-            fontSize: 120 }} onClick={''}>
-              {details.current}
+            fontSize: 120 }} onClick={() => this.updateVote(id)}>
+              {details.current}{id}
             </div>
             
             <div style={{ height: '10%', display: 'flex', justifyContent: 'center' }}>
@@ -147,6 +150,16 @@ class FlightCard extends Component {
     this.setState({ hovered: false })
     this.setState({ showbtns: false })
   }
+
+  async updateVote(id) {
+    this.setState({ loading: true })
+    console.log(id)
+    // await firebase.firestore().collection("flights").doc(id).update({
+    //   current:  firebase.firestore.FieldValue.increment(1)
+    // })
+
+    this.setState({ loading: false, success: true })
+}
 }
 
 FlightCard.propTypes = {

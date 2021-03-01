@@ -85,7 +85,7 @@ class DeleteFlight extends Component {
   }
 
   render() {
-    const { details, open } = this.props
+    const { details, open, id } = this.props
     const { loading, success, countries, destCountry, destAirport, orgCountry, orgAirport, date } = this.state
 
     return (
@@ -136,7 +136,7 @@ class DeleteFlight extends Component {
                 variant={success ? "outlined" : "contained"}
                 color={success ? "secondary" : "secondary"}
                 disabled={loading}
-                onClick={() => this.removeFlight(orgAirport, destAirport, date)}
+                onClick={() => this.removeFlight(id)}
               >
                 {success ? 'REMOVED' : 'REMOVE'}
                 {loading && <CircularProgress size={24} style={styles.buttonProgress} />}
@@ -148,20 +148,11 @@ class DeleteFlight extends Component {
     )
   }
 
-  async removeFlight() {
+  async removeFlight(id) {
         this.setState({ loading: true })
-        const flightsRef = this.props.firebase.flights()
-        const flightRef = await flightsRef.doc()
-        const userRef = await this.props.firebase.user(this.props.userId)
-        // let response = firebase.firestore().collection("flights").get().
-        //   then(snapshot => {
-        //       snapshot.docs.forEach((doc) => { console.log(doc.id) })
-        //   });
-        //   console.log(this.props.userId)
-        //   console.log(flightRef)
-
-        // await this.props.firebase.removePost(this.props.userId, flightRef)
-        await flightsRef.doc('CkDvOcc2T4cJUHs4FU1o').delete();
+        //const flightsRef = this.props.firebase.flights()
+        
+        await firebase.firestore().collection("flights").doc(id).delete()
         this.setState({ loading: false, success: true })
         
   }

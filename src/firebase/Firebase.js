@@ -67,7 +67,8 @@ class Firebase {
   }
 
   flights = () => {
-    return this.db.collection('flights').orderBy("current", "desc")
+    return this.db.collection('flights')
+    //return this.db.collection('flights').orderBy("current", "desc")
   }
 }
 

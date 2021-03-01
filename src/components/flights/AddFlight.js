@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withFirebase } from '../../firebase'
+import { firebase } from '@firebase/app';
+import '@firebase/firestore'
 import { createMuiTheme, Dialog, Box, Divider, Button, CircularProgress } from '@material-ui/core'
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
 import { ThemeProvider } from '@material-ui/styles';

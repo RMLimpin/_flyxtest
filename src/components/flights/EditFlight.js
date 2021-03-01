@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withFirebase } from '../../firebase'
+import { firebase } from '@firebase/app';
+import '@firebase/firestore'
 import { createMuiTheme, Dialog, Box, Divider, Button, CircularProgress, DialogTitle, Icon } from '@material-ui/core'
 import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers'
 import { ThemeProvider } from '@material-ui/styles';
@@ -68,8 +70,7 @@ class EditFlight extends Component {
   }
 
   render() {
-    const { } = this.props
-    const { details, open } = this.props
+    const { details, open, id } = this.props
     const { loading, success, countries, destCountry, destAirport, orgCountry, orgAirport, date } = this.state
 
     return (
@@ -105,7 +106,7 @@ class EditFlight extends Component {
                 variant={success ? "outlined" : "contained"}
                 color={success ? "secondary" : "primary"}
                 disabled={loading}
-                onClick={() => this.updateFlight(orgAirport, destAirport, date)}
+                onClick={() => this.updateFlight(orgAirport, destAirport, date, id)}
               >
                 {success ? 'UPDATED' : 'UPDATE'}
                 {loading && <CircularProgress size={24} style={styles.buttonProgress} />}
@@ -147,23 +148,19 @@ class EditFlight extends Component {
     )
   }
 
-  async updateFlight(origin, destination, date) {
-    if (!this.state.success) {
-      if (origin && destination && date) {
-        this.setState({ loading: true })
-        const flightsRef = this.props.firebase.flights()
-        const flightRef = await flightsRef.doc()
-        const userRef = await this.props.firebase.user(this.props.userId)
+  async updateFlight(origin, destination, date, id) {
+      this.setState({ loading: true })
+      // const flightsRef = this.props.firebase.flights()
+      // const flightRef = await flightsRef.doc()
+      // const userRef = await this.props.firebase.user(this.props.userId)
 
-        await flightsRef.doc('3OGs9sHC9E9E7WowJBd2').update({
-          origin: this.getIata(origin),
-          destination: this.getIata(destination),
-          date: moment(date).startOf('day').toDate().toString()
-        })
+      await firebase.firestore().collection("flights").doc(id).update({
+        origin: this.getIata(origin),
+        destination: this.getIata(destination),
+        date: moment(date).startOf('day').toDate().toString()
+      })
 
-        this.setState({ loading: false, success: true })
-      }
-    }
+      this.setState({ loading: false, success: true })
   }
 
   rendercountries(countries) {

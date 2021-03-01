@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withAuthorization } from '../../session'
 import { withFirebase } from '../../firebase'
+import { firebase } from '@firebase/app';
+import '@firebase/firestore'
 import { withRouter } from 'react-router-dom'
 import { compose } from 'redux'
 import { Icon } from '@mdi/react'
@@ -26,7 +28,7 @@ class Flights extends Component {
   
   componentDidMount() {
     this.setState({ loading: true })
-    const flightsRef = this.props.firebase.flights()
+    const flightsRef = this.props.firebase.flights().orderBy("current", "desc")
     flightsRef.onSnapshot(snapshot => this.setState({ flights: snapshot.docs, loading: false }))
   }
 
@@ -43,7 +45,7 @@ class Flights extends Component {
   renderFlightCards(flights) {
     if (flights) {
       return flights.map((flight) => {
-        return <FlightCard details={flight.data()} />
+        return <FlightCard details={flight.data()} id={flight.id} />
       })
     }
   }
